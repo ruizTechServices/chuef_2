@@ -1,14 +1,11 @@
-import { ChatbotInput } from "@/components/application/chatbot/input";
+'use client';
+import { ChatbotInputWrapper } from "@/components/application/chatbot/behavior/chatbotInputWrapper";
 
 export default function Chatbot() {
 
-
     return (
         <>
-            <ChatbotInput onSubmit={function (prompt: string): void {
-                throw new Error("Function not implemented.");
-            } } />
-            
+            <ChatbotInputWrapper />
         </>
     );
 }
