@@ -15,6 +15,10 @@ export function ChatbotInput({ onSubmit }: ChatbotInputProps) {
   };
 
   const handleSubmit = () => {
+    //todo: send input to the backend
+    //todo: get response from the backend; getting the response from the backend should route to another component that displays the response to the frontend
+    //todo: turn inputs into embeddings
+    
     onSubmit(input);
     setInput("");
   };
