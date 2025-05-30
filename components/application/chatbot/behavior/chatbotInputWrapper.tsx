@@ -5,7 +5,8 @@ import { ChatbotResponseDisplay } from '../ui/ChatbotResponseDisplay';
 import React from 'react';
 
 export function ChatbotInputWrapper() {
-    const [response, setResponse] = React.useState<string | null>(null);
+    const [chatHistory, setChatHistory] = React.useState<string[]>([]);
+const [response, setResponse] = React.useState<string | null>(null);
 
     async function handleSubmit(input: string) {
         // Log to console
@@ -18,13 +19,14 @@ export function ChatbotInputWrapper() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ prompt: input }),
+                body: JSON.stringify({ prompt: [...chatHistory, input].join('\n') }),
             });
             
             const data = await response.json();
             
             if (response.ok) {
                 setResponse(data.result);
+                setChatHistory(prev => [...prev, input]);
             } else {
                 console.error('Error:', data.error);
             }
@@ -34,8 +36,12 @@ export function ChatbotInputWrapper() {
     }
     return (
         <div>
-            <ChatbotInput onSubmit={handleSubmit} />
             <ChatbotResponseDisplay response={response} />
+            <ChatbotInput onSubmit={(prompt: string[]) => {
+                if (prompt.length >= 3) {
+                    handleSubmit(prompt[prompt.length - 2]);
+                }
+            }} />
         </div>
     );
 }
