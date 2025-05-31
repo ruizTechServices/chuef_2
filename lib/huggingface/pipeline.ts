@@ -3,16 +3,16 @@ import { pipeline } from '@huggingface/transformers';
 // You must use async/await because model loading is asynchronous
 let generator: any;
 
-export async function loadGenerator() {
+export async function loadGenerator(modelId?: string) {
   if (!generator) {
-    generator = await pipeline('text-generation');
+    const id = modelId || process.env.HUGGINGFACE_INFERENCE_MODEL || "gpt2";
+    generator = await pipeline("text-generation", id);
   }
   return generator;
 }
 
-export async function generateText(prompt: string): Promise<string> {
-  const generator = await loadGenerator();
-  const output = await generator(prompt, { max_new_tokens: 50 });
-  // output is an array of objects with 'generated_text'
-  return output[0]?.generated_text ?? '';
+export async function generateText(prompt: string, modelId?: string): Promise<string> {
+  const gen = await loadGenerator(modelId);
+  const output = await gen(prompt, { max_new_tokens: 50 });
+  return output[0]?.generated_text ?? "";
 }

@@ -9,39 +9,58 @@ import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+const PROVIDERS = [
+  "mistral",
+  "openai",
+  "gemini",
+  "anthropic",
+  "huggingface",
+] as const;
+
+type Provider = typeof PROVIDERS[number];
+
 interface ChatbotInputProps {
-  onSubmit: (prompt: string[]) => void;
+  onSubmit: (prompt: string, provider: Provider) => void;
+  disabled?: boolean;
 }
 
-export function ChatbotInput({ onSubmit }: ChatbotInputProps) {
+export function ChatbotInput({ onSubmit, disabled = false }: ChatbotInputProps) {
   const [input, setInput] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [chatHistory, setChatHistory] = React.useState<string[]>([]);
+  const [provider, setProvider] = React.useState<Provider>("mistral");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
   const handleSubmit = () => {
-    setIsLoading(true);
-    onSubmit([...chatHistory, input]);
-    //todo: create a JSONL row with the input. 
-    setChatHistory([...chatHistory, input]);
-    //todo: send the JSONL row to the JSONL file and update it, or create a new file.
+    if (!input.trim()) return;
+    onSubmit(input.trim(), provider);
     setInput("");
-    setIsLoading(false);
   };
 
   return (
     <div className="flex gap-2">
+      <select
+        value={provider}
+        onChange={(e) => setProvider(e.target.value as Provider)}
+        className="border rounded px-2 py-1 text-sm mr-2 dark:bg-background"
+        disabled={disabled}
+      >
+        {PROVIDERS.map((p) => (
+          <option key={p} value={p}>
+            {p}
+          </option>
+        ))}
+      </select>
       <Input
         value={input}
         onChange={handleInputChange}
         onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         placeholder="Type a message..."
         className="flex-1"
+        disabled={disabled}
       />
-      <Button onClick={handleSubmit} disabled={isLoading}>Send</Button>
+      <Button onClick={handleSubmit} disabled={disabled}>Send</Button>
     </div>
   );
 }
