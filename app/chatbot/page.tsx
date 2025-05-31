@@ -4,7 +4,7 @@ import { ChatHistorySidebar } from "@/components/application/chatbot/ui/chatHist
 export default function Chatbot() {
 
     return (
-        <div className="flex justify-around align-center items-center">
+        <div className="flex border-2 border-red-500 justify-around align-center items-center">
             <ChatHistorySidebar />
             <ChatbotInputWrapper />{/* Ingestion */}
         </div>

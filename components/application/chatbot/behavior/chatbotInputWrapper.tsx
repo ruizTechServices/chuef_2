@@ -89,9 +89,9 @@ export function ChatbotInputWrapper() {
   }
 
   return (
-    <div className="container border-2 h-screen">
+    <div className="md:w-[calc(500vw-15px)] w-[calc(550vw-30px)] md:h-[calc(100vh-20px)] h-[calc(25vh-10px)] flex flex-col justify-between">
       <ChatbotResponseDisplay response={response} />
-      <div className="position-fixed bottom-0">
+      <div className="">
         <ChatbotInput onSubmit={handleSubmit as any} disabled={isLoading} />
       </div>
     </div>
